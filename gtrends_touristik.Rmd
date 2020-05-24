@@ -1,0 +1,102 @@
+---
+title: "Warum Sie jetzt Reiseanzeigen schalten sollten"
+author: "Thomas Halamuda"
+date: "24 5 2020"
+output:
+  html_document: default
+  word_document: default
+---
+
+
+
+
+```{r setup, message=FALSE, warning=FALSE, include=FALSE}
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+library(ggridges)
+source("corporate_design.r")
+
+trends <- readRDS("trends.RDS")
+keywords <- unique(trends$keyword)
+start_date = "2017-01-01"
+
+
+
+trends <- trends %>%
+            filter(date >= start_date) %>%
+            mutate(year = year(date), month =  month(date)) 
+
+#trends$date <- lubridate::ymd(trends$date)
+
+```
+
+
+Für den Reisemarkt ist es Zeit aus der Corona Schockstarre zu erwachen. Nach Wochen der Unsicherheit und eingeschränkten Bewegungsfreiheit sind die Deutschen wieder bereit Ihren Urlaub zu planen. Die folgende Google Trends Analyse zeigt, dass nach dem katastrophalen Absturz des Reisemarktes das Interesse für innerdeutsche Urlaubsorte wiedererwacht. Analysiert wurden sechs beispielhafte Suchbegriffe: "Nordsee Urlaub", "Ostsee Urlaub","Allgäu Urlaub","Schwarzwald Urlaub", "Aida Urlaub" und "Ägypten Urlaub", welche als grobe Indikatoren für das aktuelle Informationsbedürfnis und Interesse an Urlaub der Deutschen dienen soll. Untersucht wurde der Zeitraum Januar 2017 - 24.05.2020.
+Wichtig: alle Werte sind normiert, d.h. die Suchbegriffe dürfen in ihren absoluten Werten nicht verglichen werden!
+
+
+```{r gesamt, echo=FALSE}
+
+trends %>%
+      filter(keyword %in% keywords[1:2]) %>%
+      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line()  +
+      cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
+      scale_x_date(date_breaks = "1 month", date_labels = "%b %Y")
+
+trends %>%
+      filter(keyword %in% keywords[3:4]) %>%
+      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line()  +
+      cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
+      scale_x_date(date_breaks = "1 month", date_labels = "%b %Y")
+
+
+
+```
+
+Nach historischen Tiefs im März/April steuern die Indizes für deutsche Urlaubsorte in diesem Monat auf einen neuen Höchstwert zu!
+Die obenstehenden Grfaik zeigt, dass das Suchinteresse für Urlaub innerhalb Deutschlands so hoch wie noch nie in den letzten Jahren ist. 
+Man beachte, dass die Suchbegriffe "nordsee urlaub" und "ostsee urlaub" für gewöhnlich erst im Juni/Juli Ihren Höchststand erreichen. Ein erster Hinweis darau, welch enormes Potenzial für Nord- und Ostsee Urlaube in diesem Jahr steckt. Aber auch das Interesse für die südlichen Gebiete Deutschlands für Berg- und Wanderurlaube steigt an. 
+
+
+
+```{r gesamt_ausserhalb, echo=FALSE}
+trends %>%
+      filter(keyword %in% keywords[5:6]) %>%
+      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line()   +
+      cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
+      scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") 
+
+```
+
+
+Dieser Trend gilt allerdings nur für Urlaubsorte innerhalb Deutschlands. Das Interesse für Kreuzfahrten als auch Fernreisen am Mittelmeer bleiben unterdurchschnittlich.
+
+
+Index: Suchinteresse im aktuellen Monat vs. mitteleres Suchinteresse in den Monaten (2017-2019)
+```{r geom_col by mean month, echo=FALSE}
+trends %>%
+      group_by(keyword, month) %>%
+      mutate(hits_sum = sum(hits),
+                hits_mean = mean(hits)) %>%
+      ungroup() %>%
+      mutate(INDEX = hits/hits_mean * 100) %>%
+      filter(date >= "2020-01-01") %>%
+      ggplot(aes(x=date, y= INDEX, fill = keyword)) + geom_col()  + facet_wrap(~keyword, nrow =1) + cd_theme()
+
+```
+
+
+
+Index: Suchinteresse im aktuellen Monat vs. höchstes monatliches Suchinteresse in den Jahren (2017-heute)
+```{r geom_col by max year, echo=FALSE}
+trends %>%
+      group_by(keyword) %>%
+      mutate(hits_sum = sum(hits),
+                hits_max = max(hits)) %>%
+      ungroup() %>%
+      mutate(INDEX = hits/hits_max * 100) %>%
+      filter(date >= "2020-01-01") %>%
+      ggplot(aes(x=date, y= INDEX, fill = keyword)) + geom_col()  + facet_wrap(~keyword, nrow =1) + cd_theme() 
+
+```
