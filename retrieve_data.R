@@ -22,3 +22,17 @@ trends <-  bind_rows(trends)
 
 #saveRDS(trends <- list(trends_all = trends_all, trends_solo = trends_solo), "trends.RDS")
 saveRDS(trends, "trends.RDS")
+
+
+
+
+library(RWordPress)
+
+options(WordpressLogin = c(user = 'zkmKJjlCKtx4'), # your user name & password
+        WordpressURL = 'http://3.122.148.72/xmlrpc.php') # your WP url + /xmlrpc.php at the end
+
+
+
+library(knitr)
+knit2wp('gtrends_touristik.Rmd', title = 'Touristik', publish = FALSE) # your filename and blog post title
+
