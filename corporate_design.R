@@ -54,15 +54,18 @@ cd_theme <- function(base_size = 11,
             )
 }
 cd_name <- "Adson Advanced Analytics"
-cd_main <- c( "#080705", "#700548", "#7272AB", "#05204A", "#D1C6AD")
-cd_gradient <- c("#770055",  "#8A2377", "#811266", "#943587", "#9E4698", "#A758A9", 
-                 "#B169BA", "#BB7BCA", "#C48CDB", "#CE9EEC")
-cd_diverging <- "tbd"
+#cd_main <- c( "#080705", "#700548", "#7272AB", "#05204A", "#D1C6AD")
+cd_main <- brewer.pal(n = 8, name = 'Dark2')
+
+#cd_gradient <- c("#770055",  "#8A2377", "#811266", "#943587", "#9E4698", "#A758A9", 
+#                 "#B169BA", "#BB7BCA", "#C48CDB", "#CE9EEC")
+cd_gradient <- brewer.pal(n=9, name = "YlOrRd")
+cd_diverging <- brewer.pal(n=11, name = "RdYlBu")
 
 
 cd_logo <- magick::image_read("../logo/logo.png")
 
-
+display.brewer.all()
 
 ### Tests ####
 library(cowplot)
