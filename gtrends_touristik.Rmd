@@ -6,7 +6,7 @@ output:
   html_document: 
     df_print: kable
     fig_width: 10
-    highlight: espresso
+    highlight: tango
     smart: no
   word_document: default
 ---
@@ -48,9 +48,14 @@ Wichtig: alle Werte sind normiert, d.h. die Suchbegriffe dürfen in ihren absolu
 
 ```{r gesamt}
 
-trends %>%
-      filter(keyword %in% keywords[1:2]) %>%
-      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line(size = 1.5)  +
+#Create Combined Line Plots bei Metatag
+timeplots_ls <- list()
+
+for (i in 1: length(levels(trends$metatag))) {
+
+  timeplots_ls[[levels(trends$metatag)[i]]] <- trends %>%
+      filter(metatag == levels(trends$metatag)[i]) %>%
+      ggplot(aes(x= as.Date(date), y= hits, color = keyword)) + geom_line(size = 1.5)  +
       cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
       scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
       scale_color_manual(values = cd_main) +
@@ -58,21 +63,8 @@ trends %>%
            caption = "Datenquelle: Google Trends (https://www.google.com/trends)",
            y = "Suchinteresse indexiert",
            x = "Datum")
-      
-
-trends %>%
-      filter(keyword %in% keywords[3:4]) %>%
-      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line(size = 1.5)  +
-      cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
-      scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
-      scale_color_manual(values = cd_main[3:4]) +
-      labs(title ="Suchinteresse im Zeitverlauf",
-           caption = "Datenquelle: Google Trends (https://www.google.com/trends)",
-           y = "Suchinteresse indexiert",
-           x = "Datum")
-
-
-
+}
+timeplots_ls[[1]]
 ```
 
 Nach historischen Tiefs im März/April steuern die Indizes für deutsche Urlaubsorte in diesem Monat auf einen neuen Höchstwert zu!
@@ -81,13 +73,29 @@ Man beachte, dass die Suchbegriffe "nordsee urlaub" und "ostsee urlaub" für gew
 
 
 
-```{r gesamt_ausserhalb}
+```{r gesamt_kreuzfahr}
 trends %>%
       filter(keyword %in% keywords[5:6]) %>%
       ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line(size = 1.5)   +
       cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
       scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
-      scale_color_manual(values = cd_main [5:6]) +
+      scale_color_manual(values = cd_main ) +
+      labs(title ="Suchinteresse im Zeitverlauf",
+           caption = "Datenquelle: Google Trends (https://www.google.com/trends)",
+           y = "Suchinteresse indexiert",
+           x = "Datum")
+
+```
+ Das Interesse für Kreuzfahrten bleibt weit unterdurchschnittlich.
+
+
+```{r gesamt_mittelmeer}
+trends %>%
+      filter(keyword %in% keywords[7:9]) %>%
+      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line(size = 1.5)   +
+      cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
+      scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
+      scale_color_manual(values = cd_main ) +
       labs(title ="Suchinteresse im Zeitverlauf",
            caption = "Datenquelle: Google Trends (https://www.google.com/trends)",
            y = "Suchinteresse indexiert",
@@ -95,8 +103,24 @@ trends %>%
 
 ```
 
+Das Mittelmeer - Interesse erwacht auch. 
 
-Dieser Trend gilt allerdings nur für Urlaubsorte innerhalb Deutschlands. Das Interesse für Kreuzfahrten als auch Fernreisen am Mittelmeer bleiben unterdurchschnittlich.
+```{r gesamt_ägypten}
+trends %>%
+      filter(keyword %in% keywords[10:12]) %>%
+      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line(size = 1.5)   +
+      cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
+      scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
+      scale_color_manual(values = cd_main ) +
+      labs(title ="Suchinteresse im Zeitverlauf",
+           caption = "Datenquelle: Google Trends (https://www.google.com/trends)",
+           y = "Suchinteresse indexiert",
+           x = "Datum")
+
+```
+
+Über das Mittelmeer hinaus wird es schwierig!
+
 
 ```{r geom_col by mean month}
 trends %>%
@@ -106,13 +130,17 @@ trends %>%
       ungroup() %>%
       mutate(INDEX = hits/hits_mean * 100) %>%
       filter(date >= "2020-01-01") %>%
-      ggplot(aes(x=date, y= INDEX, fill = keyword)) + geom_col()  + facet_wrap(~keyword, nrow =1) + cd_theme() + scale_fill_manual(values = cd_main) +
+      ggplot(aes(x=date, y= INDEX, fill = keyword)) + geom_col()  + facet_wrap(~keyword, nrow =1) + cd_theme() + scale_fill_manual(values = c(cd_main, cd_main)) +
       labs(title ="Suchinteresse im Zeitverlauf",
            caption = "Datenquelle: Google Trends (https://www.google.com/trends)",
            y = "Suchinteresse indexiert auf mittleren Monatswert",
            x = "Datum")
 
 ```
+
+
+
+
 
 
 
@@ -125,7 +153,7 @@ trends %>%
       ungroup() %>%
       mutate(INDEX = hits/hits_max * 100) %>%
       filter(date >= "2020-01-01") %>%
-      ggplot(aes(x=date, y= INDEX, fill = keyword)) + geom_col()  + facet_wrap(~keyword, nrow =1) + cd_theme() + scale_fill_manual(values = cd_main) +
+      ggplot(aes(x=date, y= INDEX, fill = keyword)) + geom_col()  + facet_wrap(~keyword, nrow =1) + cd_theme() + scale_fill_manual(values = c(cd_main, cd_main)) +
       labs(title ="Suchinteresse im Zeitverlauf",
            caption = "Datenquelle: Google Trends (https://www.google.com/trends)",
            y = "Suchinteresse indexiert auf Maximalwert",
