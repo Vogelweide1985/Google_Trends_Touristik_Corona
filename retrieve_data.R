@@ -8,7 +8,7 @@ time <- ("2015-01-01 2020-05-24") #set the time window
 channel <- 'web' #set channels
 hl <- "de" #set lanaguage
 
-tag <- "Urlaub"
+tag <- "urlaub"
 keywords <- c("ostsee", "nordsee",
               "schwarzwald", "allgäu",
               "aida","kreuzfahrt",
@@ -26,12 +26,12 @@ for (i in 1: length(keywords)) {
 trends <-  bind_rows(trends)
 
 #Meta Categorien erstellen
-trends$region <- ifelse(trends$keyword %in% keywords[1:2], "Küste","" )
-trends$region <- ifelse(trends$keyword %in% keywords[3:4], "Berge",trends$region )
-trends$region <- ifelse(trends$keyword %in% keywords[5:6], "Kreuzfahrt",trends$region )
-trends$region <- ifelse(trends$keyword %in% keywords[7:9], "Nord-Mittelmeer",trends$region )
-trends$region <- ifelse(trends$keyword %in% keywords[10:12], "Süd-Mittelmeer",trends$region )
-trends$region <- as.factor(trends$region)
+trends$metatag <- ifelse(trends$keyword %in% keywords[1:2], "Küste","" )
+trends$metatag <- ifelse(trends$keyword %in% keywords[3:4], "Berge",trends$metatag )
+trends$metatag <- ifelse(trends$keyword %in% keywords[5:6], "Kreuzfahrt",trends$metatag )
+trends$metatag <- ifelse(trends$keyword %in% keywords[7:9], "Nord-Mittelmeer",trends$metatag )
+trends$metatag <- ifelse(trends$keyword %in% keywords[10:12], "Süd-Mittelmeer",trends$metatag )
+trends$metatag <- as.factor(trends$metatag)
 
 
 #saveRDS(trends <- list(trends_all = trends_all, trends_solo = trends_solo), "trends.RDS")
