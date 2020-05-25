@@ -3,7 +3,11 @@ title: "Warum Sie jetzt Reiseanzeigen schalten sollten"
 author: "Thomas Halamuda"
 date: "24 5 2020"
 output:
-  html_document: default
+  html_document: 
+    df_print: kable
+    fig_width: 10
+    highlight: espresso
+    smart: no
   word_document: default
 ---
 
@@ -36,11 +40,17 @@ Für den Reisemarkt ist es Zeit aus der Corona Schockstarre zu erwachen. Nach Wo
 Wichtig: alle Werte sind normiert, d.h. die Suchbegriffe dürfen in ihren absoluten Werten nicht verglichen werden!
 
 
-```{r gesamt, echo=FALSE}
+```{r test}
+#trends$date <- lubridate::ymd(trends$date)
+
+```
+
+
+```{r gesamt}
 
 trends %>%
       filter(keyword %in% keywords[1:2]) %>%
-      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line()  +
+      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line(size = 1.5)  +
       cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
       scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
       scale_color_manual(values = cd_main) +
@@ -52,7 +62,7 @@ trends %>%
 
 trends %>%
       filter(keyword %in% keywords[3:4]) %>%
-      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line()  +
+      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line(size = 1.5)  +
       cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
       scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
       scale_color_manual(values = cd_main[3:4]) +
@@ -71,10 +81,10 @@ Man beachte, dass die Suchbegriffe "nordsee urlaub" und "ostsee urlaub" für gew
 
 
 
-```{r gesamt_ausserhalb, echo=FALSE}
+```{r gesamt_ausserhalb}
 trends %>%
       filter(keyword %in% keywords[5:6]) %>%
-      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line()   +
+      ggplot( (aes(x= as.Date(date), y= hits, color = keyword))) + geom_line(size = 1.5)   +
       cd_theme() + theme(axis.text.x=element_text(angle=60, hjust=1)) +
       scale_x_date(date_breaks = "1 month", date_labels = "%b %Y") +
       scale_color_manual(values = cd_main [5:6]) +
@@ -88,7 +98,7 @@ trends %>%
 
 Dieser Trend gilt allerdings nur für Urlaubsorte innerhalb Deutschlands. Das Interesse für Kreuzfahrten als auch Fernreisen am Mittelmeer bleiben unterdurchschnittlich.
 
-```{r geom_col by mean month, echo=FALSE}
+```{r geom_col by mean month}
 trends %>%
       group_by(keyword, month) %>%
       mutate(hits_sum = sum(hits),
@@ -107,7 +117,7 @@ trends %>%
 
 
 Index: Suchinteresse im aktuellen Monat vs. höchstes monatliches Suchinteresse in den Jahren (2017-heute)
-```{r geom_col by max year, echo=FALSE}
+```{r geom_col by max year}
 trends %>%
       group_by(keyword) %>%
       mutate(hits_sum = sum(hits),
