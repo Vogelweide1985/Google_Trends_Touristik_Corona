@@ -8,20 +8,20 @@ time <- ("2015-01-01 2020-05-24") #set the time window
 channel <- 'web' #set channels
 hl <- "de" #set lanaguage
 
-tag <- "urlaub"
+tag <- c("urlaub", "hotel")
 keywords <- c("ostsee", "nordsee",
               "schwarzwald", "allgäu",
               "aida","kreuzfahrt",
               "spanien","italien", "griechenland",
               "tunesien","ägypten", "türkei" ) #define the keywords
 
-keywords <- paste(keywords, tag, sep= " ")
-
+keywords <- paste(rep(keywords, each = length(tag)), tag, sep = " ")
 
 trends <- list()
 for (i in 1: length(keywords)) {
       trends[keywords[i]] <- gtrends(keywords[i], gprop =channel,geo=country, time = time, hl = hl )
 }
+
 
 trends <-  bind_rows(trends)
 
