@@ -49,4 +49,4 @@ df <- trends %>%
 
 
 
-writexl::write_xlsx(trends, "trends.xlsx")
+writexl::write_xlsx(df, "trends.xlsx")
