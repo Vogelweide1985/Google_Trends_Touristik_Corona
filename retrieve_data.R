@@ -5,7 +5,7 @@ library(lubridate)
 
 
 country <- c('DE') #set the geographic area: DE = Germany
-time <- ("2015-01-01 2020-05-24") #set the time window
+time <- ("2017-01-01 2020-05-24") #set the time window
 channel <- 'web' #set channels
 hl <- "de" #set lanaguage
 
