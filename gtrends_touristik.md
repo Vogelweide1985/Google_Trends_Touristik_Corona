@@ -7,6 +7,7 @@ output:
     code_folding: hide
     df_print: kable
     fig_width: 10
+    highlight: espresso
     keep_md: yes
   word_document: default
 ---
