@@ -1,6 +1,7 @@
 library(gtrendsR)
 library(dplyr)
-
+library(tidyr)
+library(lubridate)
 
 
 country <- c('DE') #set the geographic area: DE = Germany
@@ -40,3 +41,12 @@ trends$metatag2 <- ifelse(grepl(tag[2], trends$keyword), tag[2],trends$metatag2 
 saveRDS(trends, "trends.RDS")
 
 
+#### Export for  PPT #
+
+df <- trends %>%
+      select(date, keyword, hits) %>%
+      spread( keyword, hits)
+
+
+
+writexl::write_xlsx(trends, "trends.xlsx")
